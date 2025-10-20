@@ -98,9 +98,7 @@
 </head>
 <body>
   <div class="chat-container">
-    <div class="chat-header">
-      💬 Chat dengan HealthBot
-    </div>
+    <div class="chat-header">💬 Chat dengan HealthBot</div>
 
     <div class="chat-messages" id="chatMessages">
       <div class="bot-message message">
@@ -115,7 +113,8 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbyKWCYGuMYOGjcCIftb6sodpDiwBxt0UbQY2Oj2MgWeVW4zVLnTQq2MveADXekz8wut/exec";
+    // 🔗 Ganti ini dengan URL Apps Script kamu
+    const API_URL = "https://script.google.com/macros/s/AKfycbzG3g5H3KI0k-79KDd52wlO3JB0TGYND_35tqlNS5h8Jc-brTySXOOJ_Lb9kSO2mwBi/exec";
 
     async function sendMessage() {
       const input = document.getElementById("userInput");
@@ -129,9 +128,8 @@
       try {
         const response = await fetch(API_URL, {
           method: "POST",
-          mode: "cors",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message })
+          body: JSON.stringify({ message }),
         });
 
         if (!response.ok) {
