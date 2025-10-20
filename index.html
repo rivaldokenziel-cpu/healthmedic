@@ -115,54 +115,55 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwoFUGpnLiHdmKR3Habwaiix7NGu6dR6LsH07KjZOc732RYgbuupETlokwydEFDGEYM/exec";
+<script>
+  const API_URL = "https://script.google.com/macros/s/AKfycbyXdY3Dfe4cLSZ6NgtIAq_IXvvgeYR5O-27BTMWTIuVNrtcz8z3x5FsevjOOG1_eNe8/exec";
 
-    async function sendMessage() {
-      const input = document.getElementById("userInput");
-      const message = input.value.trim();
-      if (!message) return;
+  async function sendMessage() {
+    const input = document.getElementById("userInput");
+    const message = input.value.trim();
+    if (!message) return;
 
-      addMessage("user", message);
-      input.value = "";
-      addMessage("bot", "💬 HealthBot sedang mengetik...");
+    addMessage("user", message);
+    input.value = "";
+    addMessage("bot", "💬 HealthBot sedang mengetik...");
 
-      try {
-        const response = await fetch(API_URL, {
-          method: "POST",
-          mode: "cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message })
-        });
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message }),
+      });
 
-        if (!response.ok) {
-          throw new Error("Server tidak merespons.");
-        }
-
-        const data = await response.json();
-        replaceLastBotMessage(data.reply || "⚠️ Tidak ada respon dari server.");
-      } catch (error) {
-        console.error("Error:", error);
-        replaceLastBotMessage("⚠️ Koneksi gagal, coba lagi ya.");
+      if (!response.ok) {
+        throw new Error("Server tidak merespons.");
       }
-    }
 
-    function addMessage(sender, text) {
-      const chatMessages = document.getElementById("chatMessages");
-      const messageDiv = document.createElement("div");
-      messageDiv.classList.add(sender === "user" ? "user-message" : "bot-message", "message");
-      messageDiv.innerHTML = `<span>${text}</span>`;
-      chatMessages.appendChild(messageDiv);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
+      const data = await response.json();
+      replaceLastBotMessage(data.reply || "⚠️ Tidak ada respon dari server.");
+    } catch (error) {
+      console.error("Error:", error);
+      replaceLastBotMessage("⚠️ Koneksi gagal, coba lagi ya.");
     }
+  }
 
-    function replaceLastBotMessage(newText) {
-      const chatMessages = document.getElementById("chatMessages");
-      const botMessages = chatMessages.getElementsByClassName("bot-message");
-      if (botMessages.length > 0) {
-        botMessages[botMessages.length - 1].innerHTML = `<span>${newText}</span>`;
-      }
-      chatMessages.scrollTop = chatMessages.scrollHeight;
+  function addMessage(sender, text) {
+    const chatMessages = document.getElementById("chatMessages");
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add(sender === "user" ? "user-message" : "bot-message", "message");
+    messageDiv.innerHTML = `<span>${text}</span>`;
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function replaceLastBotMessage(newText) {
+    const chatMessages = document.getElementById("chatMessages");
+    const botMessages = chatMessages.getElementsByClassName("bot-message");
+    if (botMessages.length > 0) {
+      botMessages[botMessages.length - 1].innerHTML = `<span>${newText}</span>`;
     }
-  </script>
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+</script>
+
 </body>
 </html>
