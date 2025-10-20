@@ -3,168 +3,156 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HealthBot AI</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <title>Chat dengan HealthBot 💬</title>
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(180deg, #ffd8e0 0%, #fff 100%);
+      font-family: "Poppins", sans-serif;
+      background-color: #ffe6ea;
       display: flex;
       flex-direction: column;
-      height: 100vh;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
       margin: 0;
     }
 
-    header {
-      background-color: #ff8fb1;
+    .chat-container {
+      background: white;
+      width: 90%;
+      max-width: 450px;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-header {
+      background-color: #ff8fa3;
       color: white;
       text-align: center;
       padding: 15px;
-      font-weight: 600;
+      font-weight: bold;
       font-size: 18px;
-      border-bottom-left-radius: 20px;
-      border-bottom-right-radius: 20px;
     }
 
-    #chat {
-      flex: 1;
+    .chat-messages {
       padding: 15px;
+      flex-grow: 1;
       overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+      max-height: 400px;
     }
 
-    .bot, .user {
-      max-width: 80%;
-      padding: 12px 16px;
-      border-radius: 20px;
-      font-size: 15px;
-      line-height: 1.4em;
-      word-wrap: break-word;
-      animation: fadeIn 0.3s ease;
+    .message {
+      margin-bottom: 10px;
+      line-height: 1.4;
     }
 
-    .bot {
-      background-color: #ffe6eb;
-      align-self: flex-start;
-    }
-
-    .user {
-      background-color: #ffb6c9;
-      align-self: flex-end;
+    .user-message {
+      text-align: right;
       color: #fff;
     }
 
-    .input-area {
-      display: flex;
+    .user-message span {
+      background: #ff8fa3;
       padding: 10px;
-      background-color: #fff;
-      border-top: 1px solid #eee;
-    }
-
-    .input-area input {
-      flex: 1;
-      padding: 10px;
-      border-radius: 20px;
-      border: 1px solid #ffb6c9;
-      outline: none;
-      font-family: 'Poppins', sans-serif;
-    }
-
-    .input-area button {
-      background-color: #ff8fb1;
-      color: #fff;
-      border: none;
-      border-radius: 20px;
-      padding: 10px 16px;
-      margin-left: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: 0.2s;
-    }
-
-    .input-area button:hover {
-      background-color: #ff709b;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(5px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    ::-webkit-scrollbar { width: 5px; }
-    ::-webkit-scrollbar-thumb {
-      background-color: #ffb6c9;
-      border-radius: 10px;
-    }
-
-    .loading-dots {
+      border-radius: 15px 15px 0 15px;
       display: inline-block;
     }
 
-    .loading-dots span {
-      animation: blink 1.4s infinite both;
+    .bot-message span {
+      background: #f1f1f1;
+      padding: 10px;
+      border-radius: 15px 15px 15px 0;
+      display: inline-block;
+      color: #333;
     }
-    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
 
-    @keyframes blink {
-      0%, 80%, 100% { opacity: 0; }
-      40% { opacity: 1; }
+    .chat-input {
+      display: flex;
+      border-top: 1px solid #ddd;
+    }
+
+    .chat-input input {
+      flex-grow: 1;
+      padding: 10px;
+      border: none;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .chat-input button {
+      background: #ff8fa3;
+      border: none;
+      color: white;
+      padding: 10px 15px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .chat-input button:hover {
+      background: #ff7089;
+    }
+
+    .warning {
+      color: #ff4d4d;
+      font-size: 14px;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <header>HealthBot AI — dibuat oleh Tuan Rivaldo 💗</header>
+  <div class="chat-container">
+    <div class="chat-header">
+      💬 Chat dengan HealthBot
+    </div>
 
-  <div id="chat">
-    <div class="bot">Halo, saya <b>HealthBot</b> — asisten kesehatan ramah buatan Tuan Rivaldo. Ada yang bisa saya bantu hari ini?</div>
-  </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="bot-message message">
+        <span>Halo 👋, saya <b>HealthBot</b>! Ada yang bisa saya bantu hari ini?</span>
+      </div>
+    </div>
 
-  <div class="input-area">
-    <input type="text" id="userInput" placeholder="Tulis pesan di sini..." />
-    <button onclick="sendMessage()">Kirim</button>
+    <div class="chat-input">
+      <input id="userInput" type="text" placeholder="Tulis pesan di sini..." />
+      <button onclick="sendMessage()">Kirim</button>
+    </div>
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzUTDwUwTmO3OsNEUsqEvBhRt93nYjsB-BiOOtlwP7zoowSnOEmpod-Dn0dzO6UQU_Z/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbx3gLH4odjbMoJzdx6oawGuAMkawGPPWQba8310uvP_pFvP8P48NxkGOJO46PdfCVNN/exec";
 
     async function sendMessage() {
       const input = document.getElementById("userInput");
-      const chat = document.getElementById("chat");
-      const text = input.value.trim();
-      if (!text) return;
+      const message = input.value.trim();
+      if (!message) return;
 
-      appendMessage("user", text);
+      addMessage("user", message);
       input.value = "";
 
-      const thinking = appendMessage("bot", 'Sebentar ya, saya sedang memproses pertanyaan kamu... <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>');
-
       try {
-        const res = await fetch(SCRIPT_URL, {
+        const response = await fetch(API_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: text })
+          body: JSON.stringify({ message })
         });
 
-        const data = await res.json();
-        chat.removeChild(thinking);
-        appendMessage("bot", data.reply || "⚠️ Tidak ada respon dari bot.");
-      } catch (err) {
-        chat.removeChild(thinking);
-        appendMessage("bot", "⚠️ Koneksi gagal, coba lagi ya.");
+        const data = await response.json();
+        addMessage("bot", data.reply || "⚠️ Tidak ada respon dari server.");
+      } catch (error) {
+        console.error("Error:", error);
+        addMessage("bot", "⚠️ Koneksi gagal, coba lagi ya.");
       }
     }
 
-    function appendMessage(sender, text) {
-      const msg = document.createElement("div");
-      msg.className = sender;
-      msg.innerHTML = text;
-      const chat = document.getElementById("chat");
-      chat.appendChild(msg);
-      chat.scrollTop = chat.scrollHeight;
-      return msg;
+    function addMessage(sender, text) {
+      const chatMessages = document.getElementById("chatMessages");
+      const messageDiv = document.createElement("div");
+      messageDiv.classList.add(sender === "user" ? "user-message" : "bot-message", "message");
+      messageDiv.innerHTML = `<span>${text}</span>`;
+      chatMessages.appendChild(messageDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
     }
   </script>
 </body>
