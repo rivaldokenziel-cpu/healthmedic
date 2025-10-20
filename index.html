@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HealthBot AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(180deg, #ffd8e0 0%, #fff 100%);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      margin: 0;
+    }
+
+    header {
+      background-color: #ff8fb1;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-weight: 600;
+      font-size: 18px;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    #chat {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .bot, .user {
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: 20px;
+      font-size: 15px;
+      line-height: 1.4em;
+      word-wrap: break-word;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .bot {
+      background-color: #ffe6eb;
+      align-self: flex-start;
+    }
+
+    .user {
+      background-color: #ffb6c9;
+      align-self: flex-end;
+      color: #fff;
+    }
+
+    .input-area {
+      display: flex;
+      padding: 10px;
+      background-color: #fff;
+      border-top: 1px solid #eee;
+    }
+
+    .input-area input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 20px;
+      border: 1px solid #ffb6c9;
+      outline: none;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .input-area button {
+      background-color: #ff8fb1;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 16px;
+      margin-left: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+
+    .input-area button:hover {
+      background-color: #ff709b;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-thumb {
+      background-color: #ffb6c9;
+      border-radius: 10px;
+    }
+
+    .loading-dots {
+      display: inline-block;
+    }
+
+    .loading-dots span {
+      animation: blink 1.4s infinite both;
+    }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes blink {
+      0%, 80%, 100% { opacity: 0; }
+      40% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <header>HealthBot AI — dibuat oleh Tuan Rivaldo 💗</header>
+
+  <div id="chat">
+    <div class="bot">Halo, saya <b>HealthBot</b> — asisten kesehatan ramah buatan Tuan Rivaldo. Ada yang bisa saya bantu hari ini?</div>
+  </div>
+
+  <div class="input-area">
+    <input type="text" id="userInput" placeholder="Tulis pesan di sini..." />
+    <button onclick="sendMessage()">Kirim</button>
+  </div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzUTDwUwTmO3OsNEUsqEvBhRt93nYjsB-BiOOtlwP7zoowSnOEmpod-Dn0dzO6UQU_Z/exec";
+
+    async function sendMessage() {
+      const input = document.getElementById("userInput");
+      const chat = document.getElementById("chat");
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendMessage("user", text);
+      input.value = "";
+
+      const thinking = appendMessage("bot", 'Sebentar ya, saya sedang memproses pertanyaan kamu... <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>');
+
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text })
+        });
+
+        const data = await res.json();
+        chat.removeChild(thinking);
+        appendMessage("bot", data.reply || "⚠️ Tidak ada respon dari bot.");
+      } catch (err) {
+        chat.removeChild(thinking);
+        appendMessage("bot", "⚠️ Koneksi gagal, coba lagi ya.");
+      }
+    }
+
+    function appendMessage(sender, text) {
+      const msg = document.createElement("div");
+      msg.className = sender;
+      msg.innerHTML = text;
+      const chat = document.getElementById("chat");
+      chat.appendChild(msg);
+      chat.scrollTop = chat.scrollHeight;
+      return msg;
+    }
+  </script>
+</body>
+</html>
