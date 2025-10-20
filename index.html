@@ -130,19 +130,25 @@
 
       addMessage("user", message);
       input.value = "";
+      addMessage("bot", "💬 HealthBot sedang mengetik...");
 
       try {
         const response = await fetch(API_URL, {
           method: "POST",
+          mode: "cors",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message })
         });
 
+        if (!response.ok) {
+          throw new Error("Server tidak merespons.");
+        }
+
         const data = await response.json();
-        addMessage("bot", data.reply || "⚠️ Tidak ada respon dari server.");
+        replaceLastBotMessage(data.reply || "⚠️ Tidak ada respon dari server.");
       } catch (error) {
         console.error("Error:", error);
-        addMessage("bot", "⚠️ Koneksi gagal, coba lagi ya.");
+        replaceLastBotMessage("⚠️ Koneksi gagal, coba lagi ya.");
       }
     }
 
@@ -152,6 +158,15 @@
       messageDiv.classList.add(sender === "user" ? "user-message" : "bot-message", "message");
       messageDiv.innerHTML = `<span>${text}</span>`;
       chatMessages.appendChild(messageDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function replaceLastBotMessage(newText) {
+      const chatMessages = document.getElementById("chatMessages");
+      const botMessages = chatMessages.getElementsByClassName("bot-message");
+      if (botMessages.length > 0) {
+        botMessages[botMessages.length - 1].innerHTML = `<span>${newText}</span>`;
+      }
       chatMessages.scrollTop = chatMessages.scrollHeight;
     }
   </script>
